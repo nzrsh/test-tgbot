@@ -6,13 +6,18 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
+var token string = "7083989788:AAF-y2yluWnv0b-J5nY1fRcSoaEmXTlxk1A"
+var originID int64 = -1002403516543
+
+//var originChatId string =
+
 func main() {
-	bot, err := tgbotapi.NewBotAPI("7554672877:AAFmbbJMyOG-GQhRW537W9JtOyqOHxRRmPs")
+	bot, err := tgbotapi.NewBotAPI(token)
 	if err != nil {
 		panic(err)
 	}
 
-	bot.Debug = false
+	bot.Debug = true
 
 	log.Printf("Authorized on account %s", bot.Self.UserName)
 
@@ -27,9 +32,12 @@ func main() {
 			continue
 		}
 
-		//Выводим полезную информацию об обновлении на экран
-		NewMessageLog(update)
-
+		if update.Message.ForwardFrom != nil || update.Message.ForwardFromChat != nil {
+			log.Println("Получено сообщение от: ", update.Message.ForwardFrom)
+		} else {
+			//Выводим полезную информацию об обновлении на экран
+			//NewMessageLog(update)
+		}
 		//Создаём заготовку сообщения, чтобы правильно её обработать
 		msg := tgbotapi.NewMessage(update.Message.Chat.ID, "")
 
@@ -54,6 +62,6 @@ func main() {
 		if _, err := bot.Send(msg); err != nil {
 			log.Panic(err)
 		}
-		NewReplyLog(msg, update)
+		//NewReplyLog(msg, update)
 	}
 }
